@@ -1,5 +1,4 @@
-'use client'
-
+'use client';
 import { UpComingMovie } from './UpComingMovie';
 import { TopRatedMovie } from './TopRatedMovie';
 import { TrendingMoviesSection } from './TrendingMoviesSection';
