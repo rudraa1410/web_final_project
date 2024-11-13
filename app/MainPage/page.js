@@ -27,12 +27,21 @@ import { People } from './People';
   // If this is the default, ensure the correct path
 
 export default function MovieDatabaseHome() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault()
-    console.log('Searching for:', searchQuery)
+    if (!searchQuery.trim()) return; // Avoid search for empty query
+    
+    try {
+      const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${searchQuery}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+      const data = await response.json();
+      setSearchResults(data.results);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
     // Add search functionality here
   }
 
@@ -89,6 +98,20 @@ export default function MovieDatabaseHome() {
             </div>
           </div>
         </section>
+
+        {searchResults.length > 0 && (
+          <section className="mt-8">
+            <h2 className="text-2xl font-bold text-white">Search Results</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mt-4">
+              {searchResults.map((item) => (
+                <div key={item.id} className="bg-gray-800 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold text-yellow-400">{item.title || item.name}</h3>
+                  <p className="text-gray-300 text-sm">{item.overview.slice(0, 100)}...</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Movie Sections */}
         <TopTrending title="Top Trending Today" icon={<TrendingUp size={24} />} />

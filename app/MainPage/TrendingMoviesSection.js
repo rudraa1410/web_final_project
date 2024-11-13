@@ -13,6 +13,7 @@ export function TrendingMoviesSection({ title, icon }) {
           {icon}
           <span className="ml-2">{title}</span>
         </h2>
+        <Link href="/view-all"></Link>
         <Button
           variant="outline"
           className="text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
