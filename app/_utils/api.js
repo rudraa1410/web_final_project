@@ -122,6 +122,34 @@ export function useUpComingMovie() {
   return UpComingMovie;
 }
 
+
+
+export function useDetails(id) {
+  const [details, setDetails] = useState(null);
+  
+  useEffect(() => {
+    if (!id) return; // Ensure that an ID is provided
+
+    async function fetchDetails() {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch details');
+        }
+        const data = await response.json();
+        setDetails(data); // Set the entire data object, not just `data.results`
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchDetails();
+  }, [id]); // Depend on `id` to refetch if it changes
+
+  return details;
+}
+
+
 export function useNowPlayingMovies() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
 
