@@ -61,7 +61,7 @@ export default function MovieDetail() {
                 size={20}
               />
             </form>
-            <Link href="/wishlist" className="text-gray-300 hover:text-yellow-400">
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
               <Heart size={24} />
             </Link>
             <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
