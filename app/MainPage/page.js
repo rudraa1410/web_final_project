@@ -74,12 +74,12 @@ export default function MovieDatabaseHome() {
         {/* Hero Section */}
         <section className="mb-12">
           <div className="relative h-96 rounded-lg overflow-hidden">
-            <Image
+            {/* <Image
               src="/placeholder.svg?height=384&width=1024"
               alt="Featured Movie"
               layout="fill"
               objectFit="cover"
-            />
+            /> */}
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6">
               <h1 className="text-4xl font-bold mb-2">Featured Movie Title</h1>

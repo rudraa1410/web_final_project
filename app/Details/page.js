@@ -77,14 +77,14 @@ export default function MovieDetail() {
           <div className="flex flex-col md:flex-row gap-8">
             {/* Left column - Movie Poster */}
             <div className="md:w-1/3">
-  <Image
-    src={movie.poster}
-    alt={`${movie.title} Poster`}
-    className="w-full rounded-lg shadow-lg"
-    width={400}  // Explicit width
-    height={600} // Explicit height
-  />
-</div>
+        {/* <Image
+          src={movie.poster}
+          alt={`${movie.title} Poster`}
+          className="w-full rounded-lg shadow-lg"
+          width={400}  // Explicit width
+          height={600} // Explicit height
+        /> */}
+      </div>
 
             {/* Right column - Movie Details */}
             <div className="md:w-2/3">
