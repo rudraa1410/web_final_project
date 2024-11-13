@@ -28,7 +28,7 @@ export function UpComingMovie({ title, icon }) {
                         <div key={UpComingMovie.id} className="relative group">
                             <Image
                                 src={UpComingMovie.poster_path ? `https://image.tmdb.org/t/p/w500${UpComingMovie.poster_path}` : '/placeholder.svg'}
-                                alt={UpComingMovie.name}
+                                alt=""
                                 width={250}  // Adjust width for clearer images
                                 height={375}  // Adjust height proportionally
                                 className="rounded-lg transition-transform duration-300 group-hover:scale-105"

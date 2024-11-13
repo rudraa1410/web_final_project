@@ -28,7 +28,8 @@ export function People({ title, icon }) {
                         <div key={People.id} className="relative group">
                             <Image
                                 src={People.profile_path ? `https://image.tmdb.org/t/p/w500${People.profile_path}` : '/placeholder.svg'}
-                                alt={People.title}
+                                alt=""
+                                
                                 width={250}  // Adjust width for clearer images
                                 height={375}  // Adjust height proportionally
                                 className="rounded-lg transition-transform duration-300 group-hover:scale-105"
