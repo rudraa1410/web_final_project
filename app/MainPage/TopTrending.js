@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useTrending } from '../_utils/api';
 import { Button } from '@/components/ui/button';
-
+import Link from 'next/link';
 export function TopTrending({ title, icon }) {
     const TopTrending = useTrending();
 
@@ -26,6 +26,7 @@ export function TopTrending({ title, icon }) {
                 <div className="grid grid-flow-col auto-cols-[minmax(150px,200px)] gap-4">
                     {TopTrending.map((TopTrending) => (
                         <div key={TopTrending.id} className="relative group">
+                            <Link href={`/Details/${TopTrending.id}`}>
                             <Image
                                 src={TopTrending.poster_path ? `https://image.tmdb.org/t/p/w500${TopTrending.poster_path}` : '/placeholder.svg'}
                                 alt=""
@@ -37,6 +38,7 @@ export function TopTrending({ title, icon }) {
                                 <h3 className="text-lg font-semibold text-center"> {TopTrending.name || TopTrending.title}</h3>
                                
                             </div>
+                            </Link>
                         </div>
                     ))}
                 </div>

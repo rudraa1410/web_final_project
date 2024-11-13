@@ -149,6 +149,41 @@ export function useDetails(id) {
   return details;
 }
 
+export function useTrailer(id) {
+  const [trailerUrl, setTrailerUrl] = useState(null);
+
+  useEffect(() => {
+    if (!id) return; // Ensure an ID is provided
+
+    async function fetchTrailer() {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch trailer');
+        }
+        const data = await response.json();
+
+        // Find the official YouTube trailer
+        const officialTrailer = data.results.find(
+          (video) => video.site === 'YouTube' && video.type === 'Teaser' && video.official
+        );
+
+        if (officialTrailer) {
+          setTrailerUrl(`https://www.youtube.com/embed/${officialTrailer.key}`);
+        } else {
+          setTrailerUrl(null); // No official trailer found
+        }
+      } catch (error) {
+        console.error('Error fetching trailer:', error);
+        setTrailerUrl(null); // Set to null on error
+      }
+    }
+
+    fetchTrailer();
+  }, [id]);
+
+  return trailerUrl;
+}
 
 export function useNowPlayingMovies() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);

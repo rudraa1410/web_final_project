@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useTrendingTV } from '../_utils/api';
 import { Button } from '@/components/ui/button';
-
+ import Link from 'next/link';
 export function TrendingTVSection({ title, icon }) {
     const trendingTV = useTrendingTV();
 
@@ -26,6 +26,7 @@ export function TrendingTVSection({ title, icon }) {
                 <div className="grid grid-flow-col auto-cols-[minmax(150px,200px)] gap-4">
                     {trendingTV.map((TV) => (
                         <div key={TV.id} className="relative group">
+                            <Link href={`/Details/${TV.id}`}>
                             <Image
                                 src={TV.poster_path ? `https://image.tmdb.org/t/p/w500${TV.poster_path}` : '/placeholder.svg'}
                                 alt=""
@@ -36,6 +37,7 @@ export function TrendingTVSection({ title, icon }) {
                             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
                                 <h3 className="text-lg font-semibold text-center">{TV.name}</h3>
                             </div>
+                            </Link>
                         </div>
                     ))}
                 </div>
