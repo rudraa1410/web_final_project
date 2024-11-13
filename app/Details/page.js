@@ -44,7 +44,7 @@ export default function MovieDetail() {
       {/* Header */}
       <header className="bg-gray-800 py-4">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-yellow-400">
+          <Link href="/MainPage" className="text-2xl font-bold text-yellow-400">
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">

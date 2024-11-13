@@ -140,7 +140,7 @@ export default function LoginPageWithBg({ layoutStyle = 'full' }) {
           </div>
 
           <div className="text-sm">
-            <Link href="/forgot-password" className="font-medium text-primary hover:text-primary/80">
+            <Link href="/MainPage" className="font-medium text-primary hover:text-primary/80">
               Forgot your password?
             </Link>
           </div>
@@ -190,7 +190,7 @@ export default function LoginPageWithBg({ layoutStyle = 'full' }) {
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600">
           Do not have an account?{' '}
-          <Link href="/register" className="font-medium text-primary hover:text-primary/80" onClick={handleSignUp}>
+          <Link href="/MainPage" className="font-medium text-primary hover:text-primary/80" onClick={handleSignUp}>
             Sign up
           </Link>
         </p>

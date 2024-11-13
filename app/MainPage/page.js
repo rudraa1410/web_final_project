@@ -42,7 +42,7 @@ export default function MovieDatabaseHome() {
       {/* Header */}
       <header className="bg-gray-800 py-4">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-yellow-400">
+          <Link href="/MainPage" className="text-2xl font-bold text-yellow-400">
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
@@ -59,7 +59,7 @@ export default function MovieDatabaseHome() {
                 size={20}
               />
             </form>
-            <Link href="/wishlist" className="text-gray-300 hover:text-yellow-400">
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
               <Heart size={24} />
             </Link>
             <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
@@ -112,9 +112,9 @@ export default function MovieDatabaseHome() {
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2024 MovieDB. All rights reserved.</p>
           <div className="mt-4 space-x-4">
-            <Link href="/about" className="text-gray-300 hover:text-yellow-400">About</Link>
-            <Link href="/contact" className="text-gray-300 hover:text-yellow-400">Contact</Link>
-            <Link href="/privacy" className="text-gray-300 hover:text-yellow-400">Privacy Policy</Link>
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">About</Link>
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">Contact</Link>
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">Privacy Policy</Link>
           </div>
         </div>
       </footer>
