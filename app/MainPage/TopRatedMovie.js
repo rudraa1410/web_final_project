@@ -13,12 +13,14 @@ export function TopRatedMovie({ title, icon }) {
           {icon}
           <span className="ml-2">{title}</span>
         </h2>
+        <Link href="/viewDetails">
         <Button
           variant="outline"
           className="text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
         >
           View All
         </Button>
+        </Link>
       </div>
 
       {/* Container for horizontal scrolling */}

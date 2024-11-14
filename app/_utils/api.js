@@ -122,6 +122,29 @@ export function useUpComingMovie() {
   return UpComingMovie;
 }
 
+export function useDiscoverMovie() {
+  const [Movies, setMovies] = useState([]);
+  
+
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        const response = await fetch('https://api.themoviedb.org/3/discover/movie?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        if (!response.ok) {
+          throw new Error('Failed to fetch Top Rated movies');
+        }
+        const data = await response.json();
+        setMovies(data.results);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchMovies();
+  }, []);
+  return Movies;
+}
+
 
 
 export function useDetails(id) {

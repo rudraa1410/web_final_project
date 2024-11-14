@@ -3,8 +3,14 @@ import { useTrendingMovies } from "../_utils/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 export function TrendingMoviesSection({ title, icon }) {
   const trendingMovies = useTrendingMovies();
+  
+
+  const handleViewAllClick = () => {
+    router.push('/pageDetail'); // Redirect to the pageDetail page
+  };
 
   return (
     <section className="mb-12">
@@ -13,13 +19,14 @@ export function TrendingMoviesSection({ title, icon }) {
           {icon}
           <span className="ml-2">{title}</span>
         </h2>
-        <Link href="/view-all"></Link>
+        <Link href="/viewDetails">
         <Button
           variant="outline"
           className="text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
         >
           View All
         </Button>
+        </Link>
       </div>
 
       {/* Container for horizontal scrolling */}
