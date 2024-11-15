@@ -209,23 +209,25 @@ export function useTrailer(id) {
 }
 
 export function useNowPlayingMovies() {
-  const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+  const [NowPlayingMovies, setNowPlayingMovies] = useState([]);
 
   useEffect(() => {
-    const fetchNowPlayingMovies = async () => {
+    async function fetchNowPlayingMovies() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=ea45b5b5c1ce4e3a5e780399be11eb06`');  // Replace with actual API URL
+        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        if (!response.ok) {
+          throw new Error('Failed to fetch Top Rated movies');
+        }
         const data = await response.json();
-        console.log(data.results[0]);  // Log the first movie object
-        setNowPlayingMovies(data.results || []);  // Set movies in the state
+        setNowPlayingMovies(data.results);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error(error);
       }
-    };
+    }
+
     fetchNowPlayingMovies();
   }, []);
-
-  return nowPlayingMovies;
+  return NowPlayingMovies;
 }
 
 export function usePeople() {

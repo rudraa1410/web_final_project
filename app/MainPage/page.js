@@ -3,11 +3,13 @@ import { UpComingMovie } from './UpComingMovie';
 import { TopRatedMovie } from './TopRatedMovie';
 import { TrendingMoviesSection } from './TrendingMoviesSection';
 import { TrendingTVSection } from './TrendingTVSection';
+import { NowPlayingMovies } from './FeaturedMovie';
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+
 import {
   Search,
   Heart,
@@ -80,24 +82,7 @@ export default function MovieDatabaseHome() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <section className="mb-12">
-          <div className="relative h-96 rounded-lg overflow-hidden">
-            {/* <Image
-              src="/placeholder.svg?height=384&width=1024"
-              alt="Featured Movie"
-              layout="fill"
-              objectFit="cover"
-            /> */}
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6">
-              <h1 className="text-4xl font-bold mb-2">Featured Movie Title</h1>
-              <p className="text-lg mb-4">Brief description of the featured movie</p>
-              <Button className="bg-yellow-400 text-gray-900 hover:bg-yellow-500">
-                Watch Trailer
-              </Button>
-            </div>
-          </div>
-        </section>
+       
 
         {searchResults.length > 0 && (
           <section className="mt-8">
@@ -114,6 +99,7 @@ export default function MovieDatabaseHome() {
         )}
 
         {/* Movie Sections */}
+        <NowPlayingMovies/>
         <TopTrending title="Top Trending Today" icon={<TrendingUp size={24} />} />
         <TrendingMoviesSection title="Top Trending Movies" icon={<TrendingUp size={24} />} />
         <TrendingTVSection title="Popular TV- Series" icon={<TrendingUp size={24} />} />

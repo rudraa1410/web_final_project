@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { motion, AnimatePresence } from "framer-motion"
+//import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+//import { motion, AnimatePresence } from "framer-motion"
 import { Star, ChevronDown } from 'lucide-react'
 
 // Expanded dummy data for movies with genres
