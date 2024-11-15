@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithPopup,
@@ -11,50 +11,76 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "./firebase";
- 
+
 const AuthContext = createContext();
- 
+
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
- 
-  const gitHubSignIn = () => {
+  const [isLoading, setIsLoading] = useState(true); // Optional loading state
+
+  const gitHubSignIn = async () => {
     const provider = new GithubAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("GitHub Sign-In Error:", error);
+      throw error; // Optionally handle error UI here
+    }
   };
- 
-  const googleSignIn = () => {
+
+  const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+      throw error; // Optionally handle error UI here
+    }
   };
 
-  // Sign up with email and password
-const emailSignUp = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-  
-  // Sign in with email and password
-  const emailSignIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const emailSignUp = async (email, password) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Sign-Up Error:", error);
+      throw error; // Optionally handle error UI here
+    }
   };
 
-  const firebaseSignOut = () => {
-    return signOut(auth);
+  const emailSignIn = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Sign-In Error:", error);
+      throw error; // Optionally handle error UI here
+    }
   };
- 
+
+  const firebaseSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Sign-Out Error:", error);
+      throw error; // Optionally handle error UI here
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setIsLoading(false); // Set loading state to false once the user is determined
     });
+
     return () => unsubscribe();
-  }, [user]);
- 
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, gitHubSignIn, emailSignUp, emailSignIn, googleSignIn,firebaseSignOut }}>
+    <AuthContext.Provider value={{ user, gitHubSignIn, emailSignUp, emailSignIn, googleSignIn, firebaseSignOut, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
 };
- 
+
 export const useUserAuth = () => {
   return useContext(AuthContext);
 };
