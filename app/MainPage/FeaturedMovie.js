@@ -9,6 +9,8 @@ export function NowPlayingMovies() {
     e.preventDefault();
   };
 
+  
+
   return (
     <section className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat overflow-hidden">
     <Image

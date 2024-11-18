@@ -9,6 +9,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { useUserAuth } from "../_utils/auth-context";
 
 import {
   Search,
@@ -31,12 +32,22 @@ import { People } from './People';
 export default function MovieDatabaseHome() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const { user, firebaseSignOut } = useUserAuth(); 
   
 
   const handleSearch = async (e) => {
     e.preventDefault()
    
   }
+
+  const handleSignOut = async () => {
+    try {
+      await firebaseSignOut();
+      router.push("/LoginPage");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -60,12 +71,24 @@ export default function MovieDatabaseHome() {
                 size={20}
               />
             </form>
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
+            <Link href="/WatchListPage" className="text-gray-300 hover:text-yellow-400">
               <Heart size={24} />
             </Link>
-            <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
-              <User size={24} />
-            </Link>
+            {user ? (
+              <>
+                <span className="text-gray-300">Hello, {user.displayName || "User"}!</span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-gray-300 hover:text-yellow-400"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
+                <User size={24} />
+              </Link>
+            )}
           </nav>
         </div>
       </header>

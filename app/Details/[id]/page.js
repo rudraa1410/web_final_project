@@ -1,42 +1,122 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { useParams } from "next/navigation";
+
 import { useDetails } from "../../_utils/api";
 import { useTrailer } from "../../_utils/api";
-import Link from 'next/link';
+import { useUserAuth } from "../../_utils/auth-context";
+import { db } from "../../_utils/firebase";
 import { Input } from "@/components/ui/input";
-import {
-  Search,
-  Heart,
-  User,
-} from 'lucide-react';
+import { doc, setDoc, collection, getDoc, deleteDoc } from "firebase/firestore";
+import { Search, Heart, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const MovieDetail = () => {
   const { id } = useParams();
+  const router = useRouter();
+  const { user, firebaseSignOut } = useUserAuth();
   const movie = useDetails(id);
   const trailerUrl = useTrailer(id);
 
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Check if movie is in the watchlist
+  useEffect(() => {
+    const checkWatchlist = async () => {
+      if (user && movie) {
+        const watchlistRef = doc(
+          db,
+          "users",
+          user.uid,
+          "watchlist",
+          movie.id.toString()
+        );
+        const docSnap = await getDoc(watchlistRef);
+        setIsInWatchlist(docSnap.exists());
+      }
+    };
+
+    checkWatchlist();
+  }, [user, movie]);
 
   const toggleTrailerVisibility = () => {
     setIsTrailerVisible((prev) => !prev);
   };
 
-  const handleAddToWatchlist = () => {
-    setIsInWatchlist((prev) => !prev);
+  const handleAddToWatchlist = async () => {
+    if (!user) {
+      alert("You need to log in to add movies to your watchlist.");
+      router.push("/LoginPage");
+      return;
+    }
+
+    const movieData = {
+      id: movie.id,
+      title: movie.title,
+      poster_path: movie.poster_path,
+      release_date: movie.release_date,
+      runtime: movie.runtime,
+      vote_average: movie.vote_average,
+      tagline: movie.tagline,
+    };
+
+    try {
+      const watchlistRef = doc(
+        collection(db, "users", user.uid, "watchlist"),
+        movie.id.toString()
+      );
+      await setDoc(watchlistRef, movieData);
+      setIsInWatchlist(true); // Update state to reflect addition
+      alert(`${movie.title} has been added to your watchlist.`);
+    } catch (error) {
+      console.error("Error adding movie to watchlist:", error);
+      alert("Failed to add movie to watchlist. Please try again.");
+    }
+  };
+
+  const handleRemoveFromWatchlist = async () => {
+    if (!user) {
+      alert("You need to log in to remove movies from your watchlist.");
+      router.push("/LoginPage");
+      return;
+    }
+
+    try {
+      const watchlistRef = doc(
+        db,
+        "users",
+        user.uid,
+        "watchlist",
+        movie.id.toString()
+      );
+      await deleteDoc(watchlistRef);
+      setIsInWatchlist(false); // Update state to reflect removal
+      alert(`${movie.title} has been removed from your watchlist.`);
+    } catch (error) {
+      console.error("Error removing movie from watchlist:", error);
+      alert("Failed to remove movie from watchlist. Please try again.");
+    }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
-    // Add search functionality here
+    console.log("Searching for:", searchQuery);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await firebaseSignOut();
+      router.push("/MainPage");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   if (!movie) {
-    return <p>Loading...</p>;  // Return a loading message while the movie data is being fetched
+    return <p>Loading...</p>;
   }
 
   return (
@@ -60,12 +140,33 @@ const MovieDetail = () => {
                 size={20}
               />
             </form>
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
-              <Heart size={24} />
-            </Link>
-            <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
-              <User size={24} />
-            </Link>
+
+            {user ? (
+              <>
+                <Link
+                  href="/WatchListPage"
+                  className="text-gray-300 hover:text-yellow-400"
+                >
+                  <Heart size={24} />
+                </Link>
+                <span className="text-gray-300">
+                  Hello, {user.displayName || "User"}!
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-gray-300 hover:text-yellow-400"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/LoginPage"
+                className="text-gray-300 hover:text-yellow-400"
+              >
+                <User size={24} />
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -110,14 +211,21 @@ const MovieDetail = () => {
                 >
                   Watch Trailer
                 </button>
-                <button
-                  onClick={handleAddToWatchlist}
-                  className={`flex items-center px-4 py-2 ${
-                    isInWatchlist ? "bg-red-600" : "bg-green-600"
-                  } text-white rounded-md hover:bg-red-700`}
-                >
-                  {isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-                </button>
+                {isInWatchlist ? (
+                  <button
+                    onClick={handleRemoveFromWatchlist}
+                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    Remove from Watchlist
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleAddToWatchlist}
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    Add to Watchlist
+                  </button>
+                )}
               </div>
 
               {isTrailerVisible && trailerUrl && (
