@@ -20,6 +20,12 @@ import {
   Award,
   Calendar,
   Film,
+  Linkedin,
+  Mail,
+  Instagram,
+  Twitter,
+  Github,
+
 } from 'lucide-react'
 import { TopTrending } from './TopTrending';
 import { People } from './People';
@@ -33,12 +39,22 @@ export default function MovieDatabaseHome() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const { user, firebaseSignOut } = useUserAuth(); 
-  
+  const [hoveredIcon, setHoveredIcon] = useState(null); 
 
   const handleSearch = async (e) => {
     e.preventDefault()
    
   }
+
+  const socialLinks = [
+    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/rudra-solanki-90207925b/' },
+    { name: 'GitHub', icon: Github, url: 'https://github.com/rudra141004/web_final_project' },
+    { name: 'Gmail', icon: Mail, url: 'mailto:solankirudra1410.email@gmail.com' },
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/rudra._1410' },
+   
+   
+  ];
+
 
   const handleSignOut = async () => {
     try {
@@ -123,20 +139,43 @@ export default function MovieDatabaseHome() {
         
 
       
-        {/* <MovieSection title="Top Rated Movies" icon={<Star size={24} />} />
-        <MovieSection title="Award Winners" icon={<Award size={24} />} />
-        <MovieSection title="Coming Soon" icon={<Calendar size={24} />} />
-        <MovieSection title="Editor's Picks" icon={<Film size={24} />} /> */}
       </main>
 
       {/* Footer */}
       <footer className="bg-gray-800 py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 MovieDB. All rights reserved.</p>
-          <div className="mt-4 space-x-4">
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">About</Link>
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">Contact</Link>
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">Privacy Policy</Link>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="md:w-1/2 mb-6 md:mb-0">
+              <h2 className="text-3xl font-bold text-yellow-400 mb-4">About Me</h2>
+              <p className="text-gray-300 text-1xl leading-relaxed">
+               My Name is Rudra Solanki.
+              </p>
+            </div>
+            <div className="md:w-1/2 flex justify-center">
+              <div className="grid grid-cols-4 gap-4">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-10 h-10 bg-gray-700 rounded-full transition-transform duration-300 ease-in-out transform hover:scale-110"
+                    onMouseEnter={() => setHoveredIcon(link.name)}
+                    onMouseLeave={() => setHoveredIcon(null)}
+                  >
+                    <link.icon
+                      size={20}
+                      className={`text-yellow-400 transition-all duration-300 ${
+                        hoveredIcon === link.name ? 'scale-125' : ''
+                      }`}
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 text-center">
+            
           </div>
         </div>
       </footer>
