@@ -150,6 +150,7 @@ export function useDiscoverMovie() {
 export function useDetails(id) {
   const [details, setDetails] = useState(null);
   
+  
   useEffect(() => {
     if (!id) return; // Ensure that an ID is provided
 

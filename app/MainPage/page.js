@@ -35,16 +35,7 @@ export default function MovieDatabaseHome() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    if (!searchQuery.trim()) return; // Avoid search for empty query
-    
-    try {
-      const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${searchQuery}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
-      const data = await response.json();
-      setSearchResults(data.results);
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }
-    // Add search functionality here
+   
   }
 
   return (

@@ -1,61 +1,47 @@
-import { useNowPlayingMovies } from "../_utils/api";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { Search } from 'lucide-react';
 
 export function NowPlayingMovies() {
-  const nowPlayingMovies = useNowPlayingMovies();
+  const [searchText, setSearchText] = useState('');
 
-  // Check if `nowPlayingMovies` is undefined, null, or empty
-  if (!nowPlayingMovies || !Array.isArray(nowPlayingMovies) || nowPlayingMovies.length === 0) {
-    return <p>Loading...</p>; // Display loading text if data is still fetching
-  }
+  const handleSearch = async (e) => {
+    e.preventDefault();
+  };
 
   return (
-    <section className="relative w-full mb-12 overflow-x-auto whitespace-nowrap">
-      <div className="flex space-x-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth">
-        {nowPlayingMovies.map((movie) => (
-          <div key={movie.id} className="relative min-w-full snap-center">
-            <Link href={`/Details/${movie.id}`}>
-              <div className="relative w-full h-96 rounded-lg overflow-hidden">
-                <Image
-                  src={
-                    movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w1280${movie.poster_path}`
-                      : "/placeholder.svg" // Use placeholder if image is missing
-                  }
-                  alt={movie.title || "Featured Movie"}
-                  layout="fill"
-                  objectFit="scale-down" // Adjust to 'cover' for full image display
-                  className="rounded-none"
-                  priority
-                />
-                {/* Gradient overlay for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
-                {/* Movie title */}
-                <div className="absolute center-10 left-10">
-                  <h3 className="text-4xl font-semibold text-white">{movie.title}</h3>
-              
-                <div className="flex justify-between items-center mt-4">
-                  {/* Release Date */}
-                  <p className="text-sm text-gray-400">
-                    <strong>Release Date:</strong> {new Date(movie.release_date).toLocaleDateString()}
-                  </p>
-                  {/* Rating */}
-                  <div className="flex items-center">
-                    <span className="text-yellow-400 text-lg font-semibold">{movie.vote_average}</span>
-                    <span className="ml-1 text-sm text-gray-400">/ 10</span>
-                  </div>
-                </div>
-                  <p className="text-lg text-white mt-1">Now Playing</p>
-                </div>
-              </div>
-
-            
-            </Link>
+    <section className="relative w-full h-[350px] bg-cover bg-center bg-no-repeat overflow-hidden">
+    <Image
+      src="/banner.jpg?height=500&width=1000"
+      alt="Movie Banner"
+      layout="fill"
+      objectFit="cover"
+      className="z-0"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10">
+      <div className="container mx-auto h-full flex flex-col justify-end items-start px-4 pb-16">
+        <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Welcome </h1>
+        <p className="text-xl md:text-2xl text-gray-300 mb-8">Discover movies and TV shows. Explore now.</p>
+        <form onSubmit={handleSearch} className="w-full max-w-3xl">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search for a movie, tv show, person......"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className="w-full p-4 pr-12 text-lg text-white bg-white/20 backdrop-blur-md rounded-full placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary transition duration-300"
+            />
+            <button 
+              type="submit" 
+              className="absolute right-1 top-1 p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition duration-300"
+              aria-label="Search"
+            >
+              <Search className="w-6 h-6" />
+            </button>
           </div>
-        ))}
+        </form>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
