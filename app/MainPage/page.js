@@ -30,10 +30,7 @@ import {
 import { TopTrending } from './TopTrending';
 import { People } from './People';
 
-// Ensure to import your custom sections here
 
-
-  // If this is the default, ensure the correct path
 
 export default function MovieDatabaseHome() {
   const [searchResults, setSearchResults] = useState([]);
