@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUserAuth } from "../_utils/auth-context";
 import { db } from "../_utils/firebase";
-import { collection, getDocs, doc, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { Trash2, Star, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -33,41 +33,37 @@ const WatchListPage = () => {
       }));
       setWatchlist(movies);
     } catch (err) {
-      setError("Failed to load watchlist. Please try again later.");
+      setError(err.message || "Failed to load watchlist. Please try again.");
       console.error("Error fetching watchlist:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Remove a movie from Firestore and update state
-  const removeFromWatchlist = async (movieId) => {
+  // Handle removing a movie from the watchlist
+  const handleRemoveFromWatchlist = async (movie) => {
     if (!user) {
-      setError("You need to log in to modify your watchlist.");
+      alert("You need to log in to remove movies from your watchlist.");
       return;
     }
 
     try {
-      console.log("Deleting movie with ID:", movieId);
-      const watchlistRef = doc(db, "users", user.uid, "watchlist", movieId);
-
-      // Check if document exists
-      const docSnap = await getDoc(watchlistRef);
-      if (!docSnap.exists()) {
-        console.error(`Document with ID ${movieId} does not exist.`);
-        alert("Movie does not exist in your watchlist.");
-        return;
-      }
-
-      // Delete document
+      const watchlistRef = doc(
+        db,
+        "users",
+        user.uid,
+        "watchlist",
+        movie.id.toString()
+      );
       await deleteDoc(watchlistRef);
 
-      // Update local state
-      setWatchlist((prev) => prev.filter((movie) => movie.id !== movieId));
-      console.log("Movie successfully removed from watchlist.");
-    } catch (err) {
-      setError("Failed to remove movie. Please try again.");
-      console.error("Error removing movie:", err);
+      // Update state to reflect removal
+      setWatchlist((prev) => prev.filter((item) => item.id !== movie.id));
+
+      alert(`${movie.title} has been removed from your watchlist.`);
+    } catch (error) {
+      console.error("Error removing movie from watchlist:", error);
+      alert("Failed to remove movie from watchlist. Please try again.");
     }
   };
 
@@ -100,33 +96,39 @@ const WatchListPage = () => {
             Your watchlist is empty. Add some movies!
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {watchlist.map((movie) => (
               <div
                 key={movie.id}
                 className="bg-gray-800 p-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
               >
                 <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={`${movie.title} poster`}
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path || ""}`}
+                  alt={`${movie.title || "Movie"} poster`}
                   className="mb-4 rounded-lg object-cover h-80 w-full"
                 />
                 <h2 className="text-xl font-bold">{movie.title}</h2>
-                <p className="text-gray-400">{movie.release_date}</p>
+                <p className="text-gray-400">
+                  {movie.release_date || "Unknown Release Date"}
+                </p>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex items-center text-sm text-yellow-500">
                     <Star className="w-4 h-4 mr-1" />
-                    <span>{movie.vote_average.toFixed(1)}</span>
+                    <span>
+                      {movie.vote_average
+                        ? movie.vote_average.toFixed(1)
+                        : "N/A"}
+                    </span>
                   </div>
                   <div className="flex items-center text-sm text-blue-500">
                     <Clock className="w-4 h-4 mr-1" />
-                    <span>{movie.runtime} mins</span>
+                    <span>{movie.runtime ? `${movie.runtime} mins` : "N/A"}</span>
                   </div>
                 </div>
                 <Button
                   variant="destructive"
                   className="w-full bg-red-600 hover:bg-red-700 mt-4 transition-colors duration-300"
-                  onClick={() => removeFromWatchlist(movie.id)}
+                  onClick={() => handleRemoveFromWatchlist(movie)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" /> Remove from Watchlist
                 </Button>

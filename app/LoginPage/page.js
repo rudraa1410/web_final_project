@@ -75,7 +75,7 @@ export default function LoginPageWithBg({ layoutStyle = 'full' }) {
     }
   };
 
-  const handleGitHubSignIn = async () => {
+  const handleGitHubSignIn = async () => {  
     try {
       await gitHubSignIn();
       router.push("/MainPage"); // Redirect to dashboard after sign-in
