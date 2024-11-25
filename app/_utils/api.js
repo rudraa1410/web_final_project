@@ -122,29 +122,78 @@ export function useUpComingMovie() {
   return UpComingMovie;
 }
 
-export function useDiscoverMovie() {
-    const [Movies, setMovies] = useState([]);
-    
-  
-    useEffect(() => {
-      async function fetchMovies() {
-        try {
-          const response = await fetch('https://api.themoviedb.org/3/discover/movie?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
-          if (!response.ok) {
-            throw new Error('Failed to fetch Top Rated movies');
-          }
-          const data = await response.json();
-          setMovies(data.results);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-  
-      fetchMovies();
-    }, []);
-    return Movies;
-  }
 
+
+
+export function useDiscoverMovie(apiKey) {
+  const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedGenre, setSelectedGenre] = useState("All");
+
+  const genres = [
+    { id: 28, name: "Action" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 14, name: "Fantasy" },
+    { id: 36, name: "History" },
+    { id: 27, name: "Horror" },
+    { id: 10402, name: "Music" },
+    { id: 9648, name: "Mystery" },
+    { id: 10749, name: "Romance" },
+    { id: 878, name: "Science Fiction" },
+    { id: 10770, name: "TV Movie" },
+    { id: 53, name: "Thriller" },
+    { id: 10752, name: "War" },
+    { id: 37, name: "Western" },
+  ];
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        let genreParam = "";
+        if (selectedGenre !== "All") {
+          const genreId = genres.find((genre) => genre.name === selectedGenre)?.id;
+          if (genreId) genreParam = `&with_genres=${genreId}`;
+        }
+
+        const response = await fetch(
+          `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&page=${currentPage}${genreParam}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch movies");
+        }
+        const data = await response.json();
+        setMovies(data.results);
+        setTotalPages(data.total_pages);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+
+    fetchMovies();
+  }, [currentPage, selectedGenre, apiKey]);
+
+  const changePage = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const changeGenre = (genre) => {
+    setSelectedGenre(genre);
+    setCurrentPage(1); // Reset to page 1 when changing genre
+  };
+
+  return { movies, changePage, changeGenre, currentPage, totalPages, genres };
+}
 
 
 export function useDetails(id) {
