@@ -2,6 +2,7 @@
 
 import { useDetails } from "../../_utils/api";
 import { useTrailer } from "../../_utils/api";
+import { Credits } from "../../_utils/api";
 import { useUserAuth } from "../../_utils/auth-context";
 import { db } from "../../_utils/firebase";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ const MovieDetail = () => {
   const { user, firebaseSignOut } = useUserAuth();
   const movie = useDetails(id);
   const trailerUrl = useTrailer(id);
-
+  const credits = Credits(id);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -202,6 +203,34 @@ const MovieDetail = () => {
                 </span>
               </div>
               <p className="text-lg mb-6">{movie.overview}</p>
+
+              {/* Cast List */}
+              {credits?.cast && (
+                <div className="mb-6">
+                  <h2 className="text-2xl font-semibold mb-4">Cast</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-8 gap-1">
+                    {credits.cast.slice(0, 16).map((actor) => (
+                      <div
+                        key={actor.id}
+                        className="flex flex-col items-center text-center bg-gray-900 p-2 rounded-lg"
+                      >
+                        <Image
+                          src={
+                            actor.profile_path
+                              ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                              : "/placeholder.svg"
+                          }
+                          alt={actor.name}
+                          width={80}
+                          height={80}
+                          className="rounded-sm object-cover"
+                        />
+                        <span className="mt-2 text-sm">{actor.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Watchlist and Trailer Buttons */}
               <div className="flex flex-wrap gap-4">
