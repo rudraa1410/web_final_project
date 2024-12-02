@@ -1,16 +1,15 @@
-'use client';
-import { UpComingMovie } from './UpComingMovie';
-import { TopRatedMovie } from './TopRatedMovie';
-import { TrendingMoviesSection } from './TrendingMoviesSection';
-import { TrendingTVSection } from './TrendingTVSection';
-import { NowPlayingMovies } from './FeaturedMovie';
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useUserAuth } from "../_utils/auth-context";
+"use client";
 
+import { useUserAuth } from "../_utils/auth-context";
+import { NowPlayingMovies } from "./FeaturedMovie";
+import { People } from "./People";
+import { TopRatedMovie } from "./TopRatedMovie";
+import { TopTrending } from "./TopTrending";
+import { TrendingMoviesSection } from "./TrendingMoviesSection";
+import { TrendingTVSection } from "./TrendingTVSection";
+import { UpComingMovie } from "./UpComingMovie";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Search,
   Heart,
@@ -25,33 +24,58 @@ import {
   Instagram,
   Twitter,
   Github,
-
-} from 'lucide-react'
-import { TopTrending } from './TopTrending';
-import { People } from './People';
-
-
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function MovieDatabaseHome() {
   const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const { user, firebaseSignOut } = useUserAuth(); 
-  const [hoveredIcon, setHoveredIcon] = useState(null); 
+  const [searchText, setSearchText] = useState("");
+  const { user, firebaseSignOut } = useUserAuth();
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const handleSearch = async (e) => {
-    e.preventDefault()
-   
-  }
+    e.preventDefault();
+    if (searchText.trim() === "") return;
+
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+          searchText
+        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+      );
+      const data = await response.json();
+      setSearchResults(data.results || []);
+      setDropdownVisible(true);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
 
   const socialLinks = [
-    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/rudra-solanki-90207925b/' },
-    { name: 'GitHub', icon: Github, url: 'https://github.com/rudra141004/web_final_project' },
-    { name: 'Gmail', icon: Mail, url: 'mailto:solankirudra1410.email@gmail.com' },
-    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/rudra._1410' },
-   
-   
+    {
+      name: "LinkedIn",
+      icon: Linkedin,
+      url: "https://www.linkedin.com/in/rudra-solanki-90207925b/",
+    },
+    {
+      name: "GitHub",
+      icon: Github,
+      url: "https://github.com/rudra141004/web_final_project",
+    },
+    {
+      name: "Gmail",
+      icon: Mail,
+      url: "mailto:solankirudra1410.email@gmail.com",
+    },
+    {
+      name: "Instagram",
+      icon: Instagram,
+      url: "https://www.instagram.com/rudra._1410",
+    },
   ];
-
 
   const handleSignOut = async () => {
     try {
@@ -71,25 +95,82 @@ export default function MovieDatabaseHome() {
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
-            <form onSubmit={handleSearch} className="relative">
-              <Input
-                type="search"
-                placeholder="Search movies..."
-                className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-gray-100"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
+            <form onSubmit={handleSearch} className="relative w-full md:w-96">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search movies, TV shows, or people..."
+                  className="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-800 text-gray-100 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onFocus={() => setDropdownVisible(true)}
+                />
+                <button
+                  type="submit"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400"
+                >
+                  <Search size={20} />
+                </button>
+              </div>
+
+              {/* Dropdown Menu */}
+              {isDropdownVisible && searchResults.length > 0 && (
+                <ul className="absolute z-50 w-full bg-gray-900 text-gray-100 mt-2 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  {searchResults.map((result) => (
+                    <li
+                      key={result.id}
+                      className="p-3 hover:bg-gray-800 cursor-pointer border-b border-gray-700 last:border-b-0"
+                    >
+                      <Link
+                        href={`/Details/${result.id}`}
+                        onClick={() => {
+                          // Clear the search and hide the dropdown
+                          setSearchText("");
+                          setDropdownVisible(false);
+                        }}
+                        className="flex items-center space-x-3"
+                      >
+                        <Image
+                          src={
+                            result.poster_path
+                              ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                              : "/placeholder.jpg"
+                          }
+                          alt={result.title || result.name}
+                          width={50}
+                          height={75}
+                          className="rounded-md"
+                        />
+                        <div>
+                          <p className="font-semibold text-yellow-400">
+                            {result.name || result.title || "Unknown"}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {result.media_type === "movie"
+                              ? "Movie"
+                              : result.media_type === "tv"
+                              ? "TV Show"
+                              : "Person"}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </form>
-            <Link href="/WatchListPage" className="text-gray-300 hover:text-yellow-400">
+
+            <Link
+              href="/WatchListPage"
+              className="text-gray-300 hover:text-yellow-400"
+            >
               <Heart size={24} />
             </Link>
             {user ? (
               <>
-                <span className="text-gray-300">Hello, {user.displayName || "User"}!</span>
+                <span className="text-gray-300">
+                  Hello, {user.displayName || "User"}!
+                </span>
                 <button
                   onClick={handleSignOut}
                   className="text-gray-300 hover:text-yellow-400"
@@ -98,7 +179,10 @@ export default function MovieDatabaseHome() {
                 </button>
               </>
             ) : (
-              <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
+              <Link
+                href="/LoginPage"
+                className="text-gray-300 hover:text-yellow-400"
+              >
                 <User size={24} />
               </Link>
             )}
@@ -109,33 +193,24 @@ export default function MovieDatabaseHome() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-       
-
-        {searchResults.length > 0 && (
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold text-white">Search Results</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mt-4">
-              {searchResults.map((item) => (
-                <div key={item.id} className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-yellow-400">{item.title || item.name}</h3>
-                  <p className="text-gray-300 text-sm">{item.overview.slice(0, 100)}...</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Movie Sections */}
-        <NowPlayingMovies/>
-        <TopTrending title="Top Trending Today" icon={<TrendingUp size={24} />} />
-        <TrendingMoviesSection title="Top Trending Movies" icon={<TrendingUp size={24} />} />
-        <TrendingTVSection title="Popular TV- Series" icon={<TrendingUp size={24} />} />
+        <NowPlayingMovies />
+        <TopTrending
+          title="Top Trending Today"
+          icon={<TrendingUp size={24} />}
+        />
+        <TrendingMoviesSection
+          title="Top Trending Movies"
+          icon={<TrendingUp size={24} />}
+        />
+        <TrendingTVSection
+          title="Popular TV- Series"
+          icon={<TrendingUp size={24} />}
+        />
         <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
         <UpComingMovie title="Upcoming Movies" icon={<Calendar size={24} />} />
         <People title="Trending Celebrity" icon={<User size={24} />} />
-        
-
-      
       </main>
 
       {/* Footer */}
@@ -143,9 +218,11 @@ export default function MovieDatabaseHome() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="md:w-1/2 mb-6 md:mb-0">
-              <h2 className="text-3xl font-bold text-yellow-400 mb-4">About Me</h2>
+              <h2 className="text-3xl font-bold text-yellow-400 mb-4">
+                About Me
+              </h2>
               <p className="text-gray-300 text-1xl leading-relaxed">
-               My Name is Rudra Solanki.
+                My Name is Rudra Solanki.
               </p>
             </div>
             <div className="md:w-1/2 flex justify-center">
@@ -163,7 +240,7 @@ export default function MovieDatabaseHome() {
                     <link.icon
                       size={20}
                       className={`text-yellow-400 transition-all duration-300 ${
-                        hoveredIcon === link.name ? 'scale-125' : ''
+                        hoveredIcon === link.name ? "scale-125" : ""
                       }`}
                     />
                   </a>
@@ -171,11 +248,9 @@ export default function MovieDatabaseHome() {
               </div>
             </div>
           </div>
-          <div className="mt-8 text-center">
-            
-          </div>
+          <div className="mt-8 text-center"></div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

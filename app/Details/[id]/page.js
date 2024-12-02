@@ -7,7 +7,7 @@ import { useUserAuth } from "../../_utils/auth-context";
 import { db } from "../../_utils/firebase";
 import { Input } from "@/components/ui/input";
 import { doc, setDoc, collection, getDoc, deleteDoc } from "firebase/firestore";
-import { Search, Heart, User } from "lucide-react";
+import { Search, Heart, User ,Play,Plus,Minus} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -204,33 +204,34 @@ const MovieDetail = () => {
               </div>
               <p className="text-lg mb-6">{movie.overview}</p>
 
-              {/* Cast List */}
-              {credits?.cast && (
-                <div className="mb-6">
-                  <h2 className="text-2xl font-semibold mb-4">Cast</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-8 gap-1">
-                    {credits.cast.slice(0, 16).map((actor) => (
-                      <div
-                        key={actor.id}
-                        className="flex flex-col items-center text-center bg-gray-900 p-2 rounded-lg"
-                      >
-                        <Image
-                          src={
-                            actor.profile_path
-                              ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                              : "/placeholder.svg"
-                          }
-                          alt={actor.name}
-                          width={80}
-                          height={80}
-                          className="rounded-sm object-cover"
-                        />
-                        <span className="mt-2 text-sm">{actor.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+           {/* Cast List */}
+{credits?.cast && (
+  <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4">Cast</h2>
+    <div className="flex overflow-x-auto gap-0 pb-2 scrollbar-hide">
+      {credits.cast.slice(0, 100).map((actor) => (
+        <div
+          key={actor.id}
+          className="flex-shrink-0 flex flex-col items-center text-center bg-gray-900 p-2 rounded-lg"
+        >
+          <Image
+            src={
+              actor.profile_path
+                ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                : "/placeholder.svg"
+            }
+            alt={actor.name}
+            width={80}
+            height={80}
+            className="rounded-sm object-cover"
+          />
+          <span className="mt-2 text-sm">{actor.name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
 
               {/* Watchlist and Trailer Buttons */}
               <div className="flex flex-wrap gap-4">
@@ -238,21 +239,21 @@ const MovieDetail = () => {
                   onClick={toggleTrailerVisibility}
                   className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
-                  Watch Trailer
+                 <Play/> Watch Trailer
                 </button>
                 {isInWatchlist ? (
                   <button
                     onClick={handleRemoveFromWatchlist}
                     className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                   >
-                    Remove from Watchlist
+                    <Minus/> Remove from Watchlist
                   </button>
                 ) : (
                   <button
                     onClick={handleAddToWatchlist}
                     className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
-                    Add to Watchlist
+                    <Plus/>Add to Watchlist
                   </button>
                 )}
               </div>
