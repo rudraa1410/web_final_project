@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { Search, Heart, User } from "lucide-react";
+import { Search, Heart, User ,Home} from "lucide-react";
 import { useDiscoverMovie } from "../_utils/api";
 import Image from "next/image";
 
@@ -47,21 +47,15 @@ export default function ViewAllMovies() {
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
-            <form onSubmit={handleSearch} className="relative">
-              <Input
-                type="search"
-                placeholder="Search movies..."
-                className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-gray-100"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-            </form>
+           
             <Link
               href="/MainPage"
+              className="text-gray-300 hover:text-yellow-400"
+            >
+              <Home size={24} />
+            </Link>
+            <Link
+              href="/WatchListPage"
               className="text-gray-300 hover:text-yellow-400"
             >
               <Heart size={24} />

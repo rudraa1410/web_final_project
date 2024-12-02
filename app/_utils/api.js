@@ -264,7 +264,7 @@ export function useTrailer(id) {
 
         // Find the official YouTube trailer
         const officialTrailer = data.results.find(
-          (video) => video.site === 'YouTube' && video.type === 'Teaser' || 'Trailer'&& video.official 
+          (video) => video.site === 'YouTube' && video.type === 'Trailer' && video.official 
         );
 
         if (officialTrailer) {

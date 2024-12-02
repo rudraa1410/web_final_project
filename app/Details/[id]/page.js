@@ -7,7 +7,7 @@ import { useUserAuth } from "../../_utils/auth-context";
 import { db } from "../../_utils/firebase";
 import { Input } from "@/components/ui/input";
 import { doc, setDoc, collection, getDoc, deleteDoc } from "firebase/firestore";
-import { Search, Heart, User ,Play,Plus,Minus} from "lucide-react";
+import { Search, Heart, User, Play, Plus, Minus ,Home} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,6 +16,9 @@ import { useState, useEffect } from "react";
 const MovieDetail = () => {
   const { id } = useParams();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const { user, firebaseSignOut } = useUserAuth();
   const movie = useDetails(id);
   const trailerUrl = useTrailer(id);
@@ -102,9 +105,22 @@ const MovieDetail = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
+    if (searchText.trim() === "") return;
+
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+          searchText
+        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+      );
+      const data = await response.json();
+      setSearchResults(data.results || []);
+      setDropdownVisible(true);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   const handleSignOut = async () => {
@@ -128,18 +144,69 @@ const MovieDetail = () => {
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
-            <form onSubmit={handleSearch} className="relative">
-              <Input
-                type="search"
-                placeholder="Search movies..."
-                className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-gray-100"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
+            <form onSubmit={handleSearch} className="relative w-full md:w-96">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search movies, TV shows, or people..."
+                  className="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-800 text-gray-100 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onFocus={() => setDropdownVisible(true)}
+                />
+                <button
+                  type="submit"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400"
+                >
+                  <Search size={20} />
+                </button>
+              </div>
+
+              {/* Dropdown Menu */}
+              {isDropdownVisible && searchResults.length > 0 && (
+                <ul className="absolute z-50 w-full bg-gray-900 text-gray-100 mt-2 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  {searchResults.map((result) => (
+                    <li
+                      key={result.id}
+                      className="p-3 hover:bg-gray-800 cursor-pointer border-b border-gray-700 last:border-b-0"
+                    >
+                      <Link
+                        href={`/Details/${result.id}`}
+                        onClick={() => {
+                          // Clear the search and hide the dropdown
+                          setSearchText("");
+                          setDropdownVisible(false);
+                        }}
+                        className="flex items-center space-x-3"
+                      >
+                        <Image
+                          src={
+                            result.poster_path
+                              ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                              : "/placeholder.jpg"
+                          }
+                          alt={result.title || result.name}
+                          width={50}
+                          height={75}
+                          className="rounded-md"
+                        />
+                        <div>
+                          <p className="font-semibold text-yellow-400">
+                            {result.name || result.title || "Unknown"}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {result.media_type === "movie"
+                              ? "Movie"
+                              : result.media_type === "tv"
+                              ? "TV Show"
+                              : "Person"}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </form>
 
             {user ? (
@@ -161,14 +228,23 @@ const MovieDetail = () => {
                 </button>
               </>
             ) : (
+              
               <Link
                 href="/LoginPage"
                 className="text-gray-300 hover:text-yellow-400"
               >
                 <User size={24} />
               </Link>
+              
             )}
+              <Link
+              href="/MainPage"
+              className="text-gray-300 hover:text-yellow-400"
+            >
+              <Home size={24} />
+            </Link>
           </nav>
+         
         </div>
       </header>
       <main className="container mx-auto px-4 py-8">
@@ -204,34 +280,33 @@ const MovieDetail = () => {
               </div>
               <p className="text-lg mb-6">{movie.overview}</p>
 
-           {/* Cast List */}
-{credits?.cast && (
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4">Cast</h2>
-    <div className="flex overflow-x-auto gap-0 pb-2 scrollbar-hide">
-      {credits.cast.slice(0, 100).map((actor) => (
-        <div
-          key={actor.id}
-          className="flex-shrink-0 flex flex-col items-center text-center bg-gray-900 p-2 rounded-lg"
-        >
-          <Image
-            src={
-              actor.profile_path
-                ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                : "/placeholder.svg"
-            }
-            alt={actor.name}
-            width={80}
-            height={80}
-            className="rounded-sm object-cover"
-          />
-          <span className="mt-2 text-sm">{actor.name}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
+              {/* Cast List */}
+              {credits?.cast && (
+                <div className="mb-6">
+                  <h2 className="text-2xl font-semibold mb-4">Cast</h2>
+                  <div className="flex overflow-x-auto gap-0 pb-2 scrollbar-hide">
+                    {credits.cast.slice(0, 100).map((actor) => (
+                      <div
+                        key={actor.id}
+                        className="flex-shrink-0 flex flex-col items-center text-center bg-gray-900 p-2 rounded-lg"
+                      >
+                        <Image
+                          src={
+                            actor.profile_path
+                              ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                              : "/placeholder.svg"
+                          }
+                          alt={actor.name}
+                          width={80}
+                          height={80}
+                          className="rounded-sm object-cover"
+                        />
+                        <span className="mt-2 text-sm">{actor.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Watchlist and Trailer Buttons */}
               <div className="flex flex-wrap gap-4">
@@ -239,21 +314,22 @@ const MovieDetail = () => {
                   onClick={toggleTrailerVisibility}
                   className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
-                 <Play/> Watch Trailer
+                  <Play /> Watch Trailer
                 </button>
                 {isInWatchlist ? (
                   <button
                     onClick={handleRemoveFromWatchlist}
                     className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                   >
-                    <Minus/> Remove from Watchlist
+                    <Minus /> Remove from Watchlist
                   </button>
                 ) : (
                   <button
                     onClick={handleAddToWatchlist}
                     className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
-                    <Plus/>Add to Watchlist
+                    <Plus />
+                    Add to Watchlist
                   </button>
                 )}
               </div>
