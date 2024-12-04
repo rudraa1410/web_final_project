@@ -210,10 +210,13 @@ export default function MovieDatabaseHome() {
 
         {/* Movie Sections */}
         <NowPlayingMovies />
-        
+        <TopTrending
+          title="Top Trending Today"
+          icon={<TrendingUp size={24} />}
+        />
         <TrendingMoviesSection
           title="Top Trending Movies"
-          icon={<TrendingUp size={24} />}
+          icon={<Film size={24} />}
         />
         
         <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
@@ -222,10 +225,7 @@ export default function MovieDatabaseHome() {
           title="Popular TV- Series"
           icon={<TrendingUp size={24} />}
         />
-        <TopTrending
-          title="Top Trending Today"
-          icon={<TrendingUp size={24} />}
-        />
+      
         <People title="Trending Celebrity" icon={<User size={24} />} />
       </main>
 
@@ -238,11 +238,15 @@ export default function MovieDatabaseHome() {
                 About Me
               </h2>
               <p className="text-gray-300 text-1xl leading-relaxed">
-                My Name is Rudra Solanki.
+                My Name is Rudra Solanki !. I am a dedicated and passionate software developer student, currently pursuing my journey into the world of technology and innovation. With a strong foundation in programming languages such as Java, Python, JavaScript, and C++, I am constantly exploring new tools and technologies to build efficient and creative solutions.
+                
+
               </p>
             </div>
             <div className="md:w-1/2 flex justify-center">
+              
               <div className="grid grid-cols-4 gap-4">
+                
                 {socialLinks.map((link) => (
                   <a
                     key={link.name}

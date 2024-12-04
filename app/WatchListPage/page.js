@@ -6,6 +6,8 @@ import { db } from "../_utils/firebase";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { Trash2, Star, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Search, Heart, User, Home } from "lucide-react";
+import Link from "next/link";
 
 const WatchListPage = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -13,7 +15,6 @@ const WatchListPage = () => {
   const [error, setError] = useState(null);
   const { user } = useUserAuth();
 
-  // Fetch user's watchlist
   const fetchWatchlist = async () => {
     if (!user) {
       setError("You need to log in to view your watchlist.");
@@ -23,7 +24,6 @@ const WatchListPage = () => {
 
     try {
       setIsLoading(true);
-      console.log("Fetching watchlist for user:", user?.uid);
       const querySnapshot = await getDocs(
         collection(db, "users", user.uid, "watchlist")
       );
@@ -34,13 +34,11 @@ const WatchListPage = () => {
       setWatchlist(movies);
     } catch (err) {
       setError(err.message || "Failed to load watchlist. Please try again.");
-      console.error("Error fetching watchlist:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle removing a movie from the watchlist
   const handleRemoveFromWatchlist = async (movie) => {
     if (!user) {
       alert("You need to log in to remove movies from your watchlist.");
@@ -57,12 +55,10 @@ const WatchListPage = () => {
       );
       await deleteDoc(watchlistRef);
 
-      // Update state to reflect removal
       setWatchlist((prev) => prev.filter((item) => item.id !== movie.id));
 
       alert(`${movie.title} has been removed from your watchlist.`);
     } catch (error) {
-      console.error("Error removing movie from watchlist:", error);
       alert("Failed to remove movie from watchlist. Please try again.");
     }
   };
@@ -89,7 +85,25 @@ const WatchListPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-gray-800 z-10 flex items-center shadow-md">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <Link href="/MainPage" className="text-2xl font-bold text-yellow-400">
+            MovieDB
+          </Link>
+          <nav className="flex items-center space-x-4">
+            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
+              <Home size={24} />
+            </Link>
+            <Link href="/WatchListPage" className="text-gray-300 hover:text-yellow-400">
+              <Heart size={24} />
+            </Link>
+            <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
+              <User size={24} />
+            </Link>
+          </nav>
+        </div>
+      </header>
+      <div className="container mx-auto px-4 py-8 pt-20">
         <h1 className="text-4xl font-bold mb-8 text-center">My Watchlist</h1>
         {watchlist.length === 0 ? (
           <p className="text-center text-gray-400 text-xl">
@@ -100,14 +114,17 @@ const WatchListPage = () => {
             {watchlist.map((movie) => (
               <div
                 key={movie.id}
-                className="bg-gray-800 p-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
+                className="bg-gray-800 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 relative overflow-hidden rounded-lg p-2"
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path || ""}`}
                   alt={`${movie.title || "Movie"} poster`}
-                  className="mb-4 rounded-lg object-cover h-80 w-full"
+                 
+                  width={250}
+                  height={375}
+                  className="rounded-lg transition-transform duration-300 group-hover:scale-105"
                 />
-                <h2 className="text-xl font-bold">{movie.title}</h2>
+                <h2 className="text-xl font-bold truncate">{movie.title}</h2>
                 <p className="text-gray-400">
                   {movie.release_date || "Unknown Release Date"}
                 </p>

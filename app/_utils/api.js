@@ -13,7 +13,7 @@ export function useTrending() {
   useEffect(() => {
     async function fetchTopTrending() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/trending/all/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
         if (!response.ok) {
           throw new Error('Failed to fetch Top Rated movies');
         }
