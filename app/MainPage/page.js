@@ -196,20 +196,22 @@ export default function MovieDatabaseHome() {
 
         {/* Movie Sections */}
         <NowPlayingMovies />
-        <TopTrending
-          title="Top Trending Today"
-          icon={<TrendingUp size={24} />}
-        />
+        
         <TrendingMoviesSection
           title="Top Trending Movies"
           icon={<TrendingUp size={24} />}
         />
+        
+        <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
+        <UpComingMovie title="Upcoming Movies" icon={<Calendar size={24} />} />
         <TrendingTVSection
           title="Popular TV- Series"
           icon={<TrendingUp size={24} />}
         />
-        <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
-        <UpComingMovie title="Upcoming Movies" icon={<Calendar size={24} />} />
+        <TopTrending
+          title="Top Trending Today"
+          icon={<TrendingUp size={24} />}
+        />
         <People title="Trending Celebrity" icon={<User size={24} />} />
       </main>
 
