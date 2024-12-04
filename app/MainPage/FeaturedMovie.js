@@ -80,4 +80,4 @@ export function NowPlayingMovies() {
       </div>
     </section>
   );
-}
+} 
