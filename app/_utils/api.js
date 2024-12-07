@@ -7,26 +7,33 @@ const API_KEY = 'ea45b5b5c1ce4e3a5e780399be11eb06';
 
 
 export function useTrending() {
-  const [TopTrending, setTrending] = useState([]);
-  
+  const [topTrending, setTrending] = useState([]);
+  const [loading, setLoading] = useState(true); // Adding loading state
+  const [error, setError] = useState(null); // Adding error state
 
   useEffect(() => {
     async function fetchTopTrending() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        setLoading(true); // Set loading to true before starting the fetch
+        const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06');
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch Top Rated movies');
+          throw new Error('Failed to fetch Top Trending movies');
         }
+        
         const data = await response.json();
-        setTrending(data.results);
+        setTrending(data.results); // Update the state with the fetched data
       } catch (error) {
-        console.error(error);
+        setError(error.message); // Store the error message in state
+      } finally {
+        setLoading(false); // Set loading to false after the fetch is done
       }
     }
 
     fetchTopTrending();
   }, []);
-  return TopTrending;
+
+  return { topTrending, loading, error }; // Returning loading and error states for better control
 }
 
 

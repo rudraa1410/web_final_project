@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export function TopTrending({ title, icon }) {
-  const topTrending = useTrending();
+  const { topTrending, loading, error } = useTrending();
   const scrollContainerRef = useRef(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
@@ -51,8 +51,12 @@ export function TopTrending({ title, icon }) {
         >
           {/* Grid layout for horizontal scrolling */}
           <div className="grid grid-flow-col auto-cols-[minmax(150px,200px)] gap-4 p-1">
-            {topTrending.length === 0 ? (
+            {loading ? (
               <div>Loading...</div>
+            ) : error ? (
+              <div>Error: {error}</div>
+            ) : topTrending.length === 0 ? (
+              <div>No Trending Movies Available</div>
             ) : (
               topTrending.map((item) => (
                 <div key={item.id} className="relative group">
@@ -87,6 +91,7 @@ export function TopTrending({ title, icon }) {
           <button
             onClick={() => scroll("left")}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-8 rounded-full"
+            aria-label="Scroll left"
           >
             &lt;
           </button>
@@ -97,6 +102,7 @@ export function TopTrending({ title, icon }) {
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-8 rounded-full"
+            aria-label="Scroll right"
           >
             &gt;
           </button>
