@@ -31,8 +31,8 @@ export function NowPlayingMovies() {
       <Image
         src="/banner.jpg?height=500&width=1000"
         alt="Movie Banner"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }} // instead of objectFit
         className="z-0"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10">

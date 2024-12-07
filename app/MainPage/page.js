@@ -35,6 +35,8 @@ export default function MovieDatabaseHome() {
   const [searchText, setSearchText] = useState("");
   const { user, firebaseSignOut } = useUserAuth();
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // New state
+
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const debounce = (func, delay) => {
@@ -44,8 +46,6 @@ export default function MovieDatabaseHome() {
       timeoutId = setTimeout(() => func(...args), delay);
     };
   };
-
- 
 
   const fetchSearchResults = async () => {
     if (searchText.trim() === "") {
@@ -72,8 +72,16 @@ export default function MovieDatabaseHome() {
   const debouncedFetchSearchResults = debounce(fetchSearchResults, 500);
 
   useEffect(() => {
+    setIsDataLoaded(false); // Set loading state
     debouncedFetchSearchResults();
   }, [searchText]);
+  
+  useEffect(() => {
+    if (searchText.trim() !== "") {
+      setIsDataLoaded(true); // Set to true once data is fetched
+    }
+  }, [searchResults]);
+  
 
   const socialLinks = [
     {
@@ -116,64 +124,64 @@ export default function MovieDatabaseHome() {
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
-          <form className="relative w-full md:w-96">
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Search movies, TV shows, or people..."
-                className="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-800 text-gray-100 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onFocus={() => setDropdownVisible(true)}
-              />
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <Search size={20} />
-              </span>
-            </div>
-            {isDropdownVisible && searchResults.length > 0 && (
-              <ul className="absolute z-50 w-full bg-gray-900 text-gray-100 mt-2 rounded-lg shadow-lg max-h-64 overflow-y-auto">
-                {searchResults.map((result) => (
-                  <li
-                    key={result.id}
-                    className="p-3 hover:bg-gray-800 cursor-pointer border-b border-gray-700 last:border-b-0"
-                  >
-                    <Link
-                      href={`/Details/${result.id}`}
-                      onClick={() => {
-                        setSearchText("");
-                        setDropdownVisible(false);
-                      }}
-                      className="flex items-center space-x-3"
+            <form className="relative w-full md:w-96">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search movies, TV shows, or people..."
+                  className="pl-10 pr-4 py-2 w-full rounded-lg bg-gray-800 text-gray-100 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onFocus={() => setDropdownVisible(true)}
+                />
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Search size={20} />
+                </span>
+              </div>
+              {isDataLoaded &&isDropdownVisible && searchResults.length > 0 && (
+                <ul className="absolute z-50 w-full bg-gray-900 text-gray-100 mt-2 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  {searchResults.map((result) => (
+                    <li
+                      key={result.id}
+                      className="p-3 hover:bg-gray-800 cursor-pointer border-b border-gray-700 last:border-b-0"
                     >
-                      <Image
-                        src={
-                          result.poster_path
-                            ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
-                            : "/placeholder.jpg"
-                        }
-                        alt={result.title || result.name}
-                        width={50}
-                        height={75}
-                        className="rounded-md"
-                      />
-                      <div>
-                        <p className="font-semibold text-yellow-400">
-                          {result.name || result.title || "Unknown"}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {result.media_type === "movie"
-                            ? "Movie"
-                            : result.media_type === "tv"
-                            ? "TV Show"
-                            : "Person"}
-                        </p>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </form>
+                      <Link
+                        href={`/Details/${result.id}`}
+                        onClick={() => {
+                          setSearchText("");
+                          setDropdownVisible(false);
+                        }}
+                        className="flex items-center space-x-3"
+                      >
+                        <Image
+                          src={
+                            result.poster_path
+                              ? `https://image.tmdb.org/t/p/w92${result.poster_path}`
+                              : "/placeholder.jpg"
+                          }
+                          alt={result.title || result.name}
+                          width={50}
+                          height={75}
+                          className="rounded-md"
+                        />
+                        <div>
+                          <p className="font-semibold text-yellow-400">
+                            {result.name || result.title || "Unknown"}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {result.media_type === "movie"
+                              ? "Movie"
+                              : result.media_type === "tv"
+                              ? "TV Show"
+                              : "Person"}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </form>
             <Link
               href="/WatchListPage"
               className="text-gray-300 hover:text-yellow-400"
@@ -218,14 +226,14 @@ export default function MovieDatabaseHome() {
           title="Top Trending Movies"
           icon={<Film size={24} />}
         />
-        
+
         <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
         <UpComingMovie title="Upcoming Movies" icon={<Calendar size={24} />} />
         <TrendingTVSection
           title="Popular TV- Series"
           icon={<TrendingUp size={24} />}
         />
-      
+
         <People title="Trending Celebrity" icon={<User size={24} />} />
       </main>
 
@@ -238,15 +246,16 @@ export default function MovieDatabaseHome() {
                 About Me
               </h2>
               <p className="text-gray-300 text-1xl leading-relaxed">
-                My Name is Rudra Solanki !. I am a dedicated and passionate software developer student, currently pursuing my journey into the world of technology and innovation. With a strong foundation in programming languages such as Java, Python, JavaScript, and C++, I am constantly exploring new tools and technologies to build efficient and creative solutions.
-                
-
+                My Name is Rudra Solanki !. I am a dedicated and passionate
+                software developer student, currently pursuing my journey into
+                the world of technology and innovation. With a strong foundation
+                in programming languages such as Java, Python, JavaScript, and
+                C++, I am constantly exploring new tools and technologies to
+                build efficient and creative solutions.
               </p>
             </div>
             <div className="md:w-1/2 flex justify-center">
-              
               <div className="grid grid-cols-4 gap-4">
-                
                 {socialLinks.map((link) => (
                   <a
                     key={link.name}
