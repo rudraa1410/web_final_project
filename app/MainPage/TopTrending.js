@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useTrending } from "../_utils/api";
 import { Button } from "@/components/ui/button";
@@ -51,30 +51,34 @@ export function TopTrending({ title, icon }) {
         >
           {/* Grid layout for horizontal scrolling */}
           <div className="grid grid-flow-col auto-cols-[minmax(150px,200px)] gap-4 p-1">
-            {topTrending.map((item) => (
-              <div key={item.id} className="relative group">
-                <Link href={`/Details/${item.id}`}>
-                  <Image
-                    src={
-                      item.poster_path
-                        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                        : "/placeholder.svg"
-                    }
-                    alt={item.title || item.name}
-                    width={250} // Adjust width for clearer images
-                    height={375} // Adjust height proportionally
-                    className="rounded-lg transition-transform duration-300 group-hover:scale-105"
-                    priority={false} // Set to false for lazy loading
-                    loading="lazy" // Lazy loading enabled by default
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
-                    <h3 className="text-lg font-semibold text-center">
-                      {item.name || item.title}
-                    </h3>
-                  </div>
-                </Link>
-              </div>
-            ))}
+            {topTrending.length === 0 ? (
+              <div>Loading...</div>
+            ) : (
+              topTrending.map((item) => (
+                <div key={item.id} className="relative group">
+                  <Link href={`/Details/${item.id}`}>
+                    <Image
+                      src={
+                        item.poster_path
+                          ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                          : "/placeholder.svg"
+                      }
+                      alt={item.title || item.name}
+                      width={250} // Adjust width for clearer images
+                      height={375} // Adjust height proportionally
+                      className="rounded-lg transition-transform duration-300 group-hover:scale-105"
+                      priority={false} // Set to false for lazy loading
+                      loading="lazy" // Lazy loading enabled by default
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
+                      <h3 className="text-lg font-semibold text-center">
+                        {item.name || item.title}
+                      </h3>
+                    </div>
+                  </Link>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
