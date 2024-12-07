@@ -64,6 +64,8 @@ export function TopTrending({ title, icon }) {
                     width={250} // Adjust width for clearer images
                     height={375} // Adjust height proportionally
                     className="rounded-lg transition-transform duration-300 group-hover:scale-105"
+                    priority={false} // Set to false for lazy loading
+                    loading="lazy" // Lazy loading enabled by default
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
                     <h3 className="text-lg font-semibold text-center">
