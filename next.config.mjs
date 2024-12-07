@@ -1,13 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'image.tmdb.org',
-      },
-    ],
+    domains: ['image.tmdb.org'], // TMDB image domain
   },
+
 
   eslint: {
     ignoreDuringBuilds: true,

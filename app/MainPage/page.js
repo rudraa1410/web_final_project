@@ -162,6 +162,7 @@ export default function MovieDatabaseHome() {
                           alt={result.title || result.name}
                           width={50}
                           height={75}
+                          priority={true}
                           className="rounded-md"
                         />
                         <div>

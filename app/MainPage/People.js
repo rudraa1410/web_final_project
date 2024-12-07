@@ -57,7 +57,8 @@ export function People({ title, icon }) {
                   src={person.profile_path ? `https://image.tmdb.org/t/p/w500${person.profile_path}` : '/placeholder.svg'}
                   alt={person.name}
                   width={250}  // Adjust width for clearer images
-                  height={375}  // Adjust height proportionally
+                  height={375}
+                  priority={true}  // Adjust height proportionally
                   className="rounded-lg transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">

@@ -188,6 +188,7 @@ const MovieDetail = () => {
                           alt={result.title || result.name}
                           width={50}
                           height={75}
+                          priority={true}
                           className="rounded-md"
                         />
                         <div>
@@ -259,6 +260,7 @@ const MovieDetail = () => {
                     : "/placeholder.svg"
                 }
                 alt={movie.title}
+                loading="lazy"
                 width={400}
                 height={600}
               />
@@ -299,6 +301,7 @@ const MovieDetail = () => {
                           alt={actor.name}
                           width={80}
                           height={80}
+                          loading="lazy"
                           className="rounded-sm object-cover"
                         />
                         <span className="mt-2 text-sm">{actor.name}</span>
