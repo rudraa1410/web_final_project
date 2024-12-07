@@ -1,6 +1,6 @@
 import { AuthContextProvider } from "./_utils/auth-context"; // Adjust the path as per your project structure
 import localFont from "next/font/local";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
 const geistSans = localFont({
@@ -24,6 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <SpeedInsights />
         <AuthContextProvider>
           {children}
         </AuthContextProvider>
