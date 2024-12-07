@@ -39,48 +39,48 @@ export default function MovieDatabaseHome() {
 
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
-  // const debounce = (func, delay) => {
-  //   let timeoutId;
-  //   return (...args) => {
-  //     if (timeoutId) clearTimeout(timeoutId);
-  //     timeoutId = setTimeout(() => func(...args), delay);
-  //   };
-  // };
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
 
-  // const fetchSearchResults = async () => {
-  //   if (searchText.trim() === "") {
-  //     setSearchResults([]);
-  //     setDropdownVisible(false);
-  //     return;
-  //   }
+  const fetchSearchResults = async () => {
+    if (searchText.trim() === "") {
+      setSearchResults([]);
+      setDropdownVisible(false);
+      return;
+    }
 
-  //   try {
-  //     const response = await fetch(
-  //       `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
-  //         searchText
-  //       )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
-  //     );
-  //     const data = await response.json();
-  //     setSearchResults(data.results || []);
-  //     setDropdownVisible(true);
-  //   } catch (error) {
-  //     console.error("Error fetching search results:", error);
-  //   }
-  // };
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+          searchText
+        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+      );
+      const data = await response.json();
+      setSearchResults(data.results || []);
+      setDropdownVisible(true);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
 
-  // // Debounced version of the fetch function
-  // const debouncedFetchSearchResults = debounce(fetchSearchResults, 500);
+  // Debounced version of the fetch function
+  const debouncedFetchSearchResults = debounce(fetchSearchResults, 500);
 
-  // useEffect(() => {
-  //   setIsDataLoaded(false); // Set loading state
-  //   debouncedFetchSearchResults();
-  // }, [searchText]);
+  useEffect(() => {
+    setIsDataLoaded(false); // Set loading state
+    debouncedFetchSearchResults();
+  }, [searchText]);
   
-  // useEffect(() => {
-  //   if (searchText.trim() !== "") {
-  //     setIsDataLoaded(true); // Set to true once data is fetched
-  //   }
-  // }, [searchResults]);
+  useEffect(() => {
+    if (searchText.trim() !== "") {
+      setIsDataLoaded(true); // Set to true once data is fetched
+    }
+  }, [searchResults]);
   
 
   const socialLinks = [
@@ -124,7 +124,7 @@ export default function MovieDatabaseHome() {
             MovieDB
           </Link>
           <nav className="flex items-center space-x-4">
-            {/* <form className="relative w-full md:w-96">
+            <form className="relative w-full md:w-96">
               <div className="relative">
                 <Input
                   type="text"
@@ -182,7 +182,7 @@ export default function MovieDatabaseHome() {
                   ))}
                 </ul>
               )}
-            </form> */}
+            </form>
             <Link
               href="/WatchListPage"
               className="text-gray-300 hover:text-yellow-400"
