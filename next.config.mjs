@@ -5,7 +5,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'image.tmdb.org',
-        pathname: '/**', // Matches all paths on this domain
+        pathname: '/t/p/**', // Matches all paths on this domain
       },
     ],
   },
