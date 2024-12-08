@@ -9,10 +9,14 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export function TrendingMoviesSection({ title, icon }) {
   const trendingMovies = useTrendingMovies()
+  
+
+
   const scrollContainerRef = useRef(null)
   const [showLeftButton, setShowLeftButton] = useState(false)
   const [showRightButton, setShowRightButton] = useState(true)
 
+  
   const handleScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
