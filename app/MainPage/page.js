@@ -36,7 +36,7 @@ export default function MovieDatabaseHome() {
   const { user, firebaseSignOut } = useUserAuth();
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false); // New state
-
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const debounce = (func, delay) => {
@@ -58,7 +58,7 @@ export default function MovieDatabaseHome() {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
           searchText
-        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+        )}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`
       );
       const data = await response.json();
       setSearchResults(data.results || []);

@@ -7,7 +7,7 @@ export function NowPlayingMovies() {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchText.trim() === "") return;
@@ -16,7 +16,7 @@ export function NowPlayingMovies() {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
           searchText
-        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+        )}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`
       );
       const data = await response.json();
       setSearchResults(data.results || []);

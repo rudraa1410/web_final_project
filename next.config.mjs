@@ -1,13 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-      domains: ['image.tmdb.org'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+        pathname: '/**', // Matches all paths on this domain
+      },
+    ],
   },
-
-  
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+ 
 };
 
 export default nextConfig;

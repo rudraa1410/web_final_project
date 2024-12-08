@@ -26,7 +26,7 @@ const MovieDetail = () => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
   // Check if movie is in the watchlist
   useEffect(() => {
     const checkWatchlist = async () => {
@@ -113,7 +113,7 @@ const MovieDetail = () => {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
           searchText
-        )}&include_adult=false&language=en-US&page=1&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`
+        )}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`
       );
       const data = await response.json();
       setSearchResults(data.results || []);

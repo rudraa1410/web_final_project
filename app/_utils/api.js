@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = 'ea45b5b5c1ce4e3a5e780399be11eb06';
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 
 export function useTrending() {
@@ -15,7 +15,8 @@ export function useTrending() {
     async function fetchTopTrending() {
       try {
         setLoading(true); // Set loading to true before starting the fetch
-        const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06');
+        const response = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`);
+
         
         if (!response.ok) {
           throw new Error('Failed to fetch Top Trending movies');
@@ -44,7 +45,7 @@ export function useTrendingMovies() {
   useEffect(() => {
     async function fetchTrendingMovies() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}` );
         if (!response.ok) {
           throw new Error('Failed to fetch trending movies');
         }
@@ -67,7 +68,7 @@ export function useTrendingTV() {
   useEffect(() => {
     async function fetchTrendingTV() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/trending/tv/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=${API_KEY}` );
         if (!response.ok) {
           throw new Error('Failed to fetch trending TV');
         }
@@ -90,7 +91,7 @@ export function useTopRatedMovie() {
   useEffect(() => {
     async function fetchTopRatedMovie() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}` );
         if (!response.ok) {
           throw new Error('Failed to fetch Top Rated movies');
         }
@@ -113,7 +114,7 @@ export function useUpComingMovie() {
   useEffect(() => {
     async function fetchUpComingMovie() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/upcoming?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}` );
         if (!response.ok) {
           throw new Error('Failed to fetch Top Rated movies');
         }
@@ -212,7 +213,7 @@ export function useDetails(id) {
 
     async function fetchDetails() {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
         if (!response.ok) {
           throw new Error('Failed to fetch details');
         }
@@ -238,7 +239,7 @@ export function Credits(id) {
 
     async function fetchcredits() {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`);
         if (!response.ok) {
           throw new Error('Failed to fetch details');
         }
@@ -263,7 +264,7 @@ export function useTrailer(id) {
 
     async function fetchTrailer() {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&api_key=ea45b5b5c1ce4e3a5e780399be11eb06`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&api_key=${API_KEY}`);
         if (!response.ok) {
           throw new Error('Failed to fetch trailer');
         }
@@ -297,7 +298,7 @@ export function useNowPlayingMovies() {
   useEffect(() => {
     async function fetchNowPlayingMovies() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`);
         if (!response.ok) {
           throw new Error('Failed to fetch Top Rated movies');
         }
@@ -320,7 +321,7 @@ export function usePeople() {
   useEffect(() => {
     async function fetchPeople() {
       try {
-        const response = await fetch('https://api.themoviedb.org/3/trending/person/day?api_key=ea45b5b5c1ce4e3a5e780399be11eb06' );
+        const response = await fetch(`https://api.themoviedb.org/3/trending/person/day?api_key=${API_KEY}` );
         if (!response.ok) {
           throw new Error('Failed to fetch Top Rated movies');
         }

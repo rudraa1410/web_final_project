@@ -13,7 +13,7 @@ export default function ViewAllMovies() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const API_KEY = "ea45b5b5c1ce4e3a5e780399be11eb06";
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;;
   const { movies, changePage, changeGenre, currentPage, totalPages, genres } =
     useDiscoverMovie(API_KEY);
 
