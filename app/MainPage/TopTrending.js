@@ -65,7 +65,7 @@ export function TopTrending({ title, icon }) {
                       src={
                         item.poster_path
                           ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                          : "/placeholder.svg"
+                          : "/placeholder.jpg"
                       }
                       alt={item.title || item.name}
                       width={250} // Adjust width for clearer images
