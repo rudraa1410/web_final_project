@@ -4,6 +4,8 @@ import { useUserAuth } from "../_utils/auth-context";
 import { NowPlayingMovies } from "./FeaturedMovie";
 import { People } from "./People";
 import { TopRatedMovie } from "./TopRatedMovie";
+import { PopularTV } from "./PopularTV";
+import { TopRatedTV } from "./TopRatedTV";
 import { TopTrending } from "./TopTrending";
 import { TrendingMoviesSection } from "./TrendingMoviesSection";
 import { TrendingTVSection } from "./TrendingTVSection";
@@ -231,9 +233,12 @@ export default function MovieDatabaseHome() {
         <TopRatedMovie title="Top Rated Movies" icon={<Star size={24} />} />
         <UpComingMovie title="Upcoming Movies" icon={<Calendar size={24} />} />
         <TrendingTVSection
-          title="Popular TV- Series"
+          title="Trending TV- Series"
           icon={<TrendingUp size={24} />}
         />
+         <PopularTV title="Popular TV- Series" icon={<Award size={24} />} />
+        <TopRatedTV title="Top Rated TV- Series" icon={<Star size={24} />} />
+          
 
         <People title="Trending Celebrity" icon={<User size={24} />} />
       </main>

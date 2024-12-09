@@ -32,12 +32,14 @@ export function TrendingTVSection({ title, icon }) {
                     {icon}
                     <span className="ml-2">{title}</span>
                 </h2>
+                <Link href="/viewTVDetails">
                 <Button
                     variant="outline"
                     className="text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
                 >
                     View All
                 </Button>
+                </Link>
             </div>
 
             {/* Container for horizontal scrolling */}
@@ -51,7 +53,7 @@ export function TrendingTVSection({ title, icon }) {
                     <div className="grid grid-flow-col auto-cols-[minmax(150px,200px)] gap-4 p-1">
                         {trendingTV.map((TV) => (
                             <div key={TV.id} className="relative group">
-                                <Link href={`/Details/${TV.id}`}>
+                                <Link href={`/TVDetails/${TV.id}`}>
                                     <Image
                                         src={TV.poster_path ? `https://image.tmdb.org/t/p/w500${TV.poster_path}` : '/placeholder.svg'}
                                         alt=""
