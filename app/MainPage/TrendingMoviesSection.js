@@ -111,4 +111,3 @@ export function TrendingMoviesSection({ title, icon }) {
     </section>
   )
 }
-

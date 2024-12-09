@@ -1,9 +1,17 @@
+import { useState } from "react";
 import Image from "next/image";
 import { useTrending } from "../_utils/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
 export function TopTrending({ title, icon }) {
   const TopTrending = useTrending();
+  const [fallback, setFallback] = useState("/placeholder.svg");
+
+  // Function to handle image error
+  const handleImageError = () => {
+    setFallback("/placeholder.svg");
+  };
 
   return (
     <section className="mb-12">
@@ -33,16 +41,16 @@ export function TopTrending({ title, icon }) {
                   src={
                     TopTrending.poster_path
                       ? `https://image.tmdb.org/t/p/w500${TopTrending.poster_path}`
-                      : "/placeholder.svg"
+                      : fallback
                   }
-                  alt=""
+                  alt={TopTrending.name || TopTrending.title}
                   width={250} // Adjust width for clearer images
                   height={375} // Adjust height proportionally
                   className="rounded-lg transition-transform duration-300 group-hover:scale-105"
+                  onError={handleImageError} // Set fallback image on error
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
                   <h3 className="text-lg font-semibold text-center">
-                    {" "}
                     {TopTrending.name || TopTrending.title}
                   </h3>
                 </div>
