@@ -34,12 +34,7 @@ export function People({ title, icon }) {
           {icon}
           <span className="ml-2">{title}</span>
         </h2>
-        <Button
-          variant="outline"
-          className="text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
-        >
-          View All
-        </Button>
+       
       </div>
 
       {/* Container for horizontal scrolling */}

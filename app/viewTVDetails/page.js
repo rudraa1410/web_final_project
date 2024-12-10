@@ -1,4 +1,7 @@
 "use client";
+import Header from "@/components/Header";
+import Footer from "@/components/footer";
+import SearchBar from "@/components/SearchBar";
 
 import { useState, useEffect } from "react";
 import { Star } from "lucide-react";
@@ -55,7 +58,15 @@ const useDiscoverTV = (apiKey) => {
     // Optional: Add functionality for filtering by genre
   };
 
-  return { TVs, genres, currentPage, totalPages, changePage, changeGenre, error };
+  return {
+    TVs,
+    genres,
+    currentPage,
+    totalPages,
+    changePage,
+    changeGenre,
+    error,
+  };
 };
 
 export default function ViewAllTVs() {
@@ -64,8 +75,15 @@ export default function ViewAllTVs() {
   const [searchResults, setSearchResults] = useState([]);
 
   const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-  const { TVs = [], genres, currentPage, totalPages, changePage, changeGenre, error } =
-    useDiscoverTV(API_KEY);
+  const {
+    TVs = [],
+    genres,
+    currentPage,
+    totalPages,
+    changePage,
+    changeGenre,
+    error,
+  } = useDiscoverTV(API_KEY);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -84,34 +102,23 @@ export default function ViewAllTVs() {
 
   const filteredTVs = (Array.isArray(TVs) ? TVs : []).sort((a, b) => {
     if (sortBy === "title") return a.name?.localeCompare(b.name || "") || 0;
-    if (sortBy === "rating") return (b.vote_average || 0) - (a.vote_average || 0);
-    if (sortBy === "popularity") return (b.popularity || 0) - (a.popularity || 0);
+    if (sortBy === "rating")
+      return (b.vote_average || 0) - (a.vote_average || 0);
+    if (sortBy === "popularity")
+      return (b.popularity || 0) - (a.popularity || 0);
     return 0;
   });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
-      <header className="fixed top-0 left-0 right-0 h-16 bg-gray-800 z-10 flex items-center">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link href="/MainPage" className="text-2xl font-bold text-yellow-400">
-            TVDB
-          </Link>
-          <nav className="flex items-center space-x-4">
-            <Link href="/MainPage" className="text-gray-300 hover:text-yellow-400">
-              <Home size={24} />
-            </Link>
-            <Link href="/WatchListPage" className="text-gray-300 hover:text-yellow-400">
-              <Heart size={24} />
-            </Link>
-            <Link href="/LoginPage" className="text-gray-300 hover:text-yellow-400">
-              <User size={24} />
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header searchComponent={<SearchBar API_KEY={API_KEY} />} />
       <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mb-4">Discover TVs</h1>
-        {error && <p className="text-red-500">Error loading data. Please try again later.</p>}
+        {error && (
+          <p className="text-red-500">
+            Error loading data. Please try again later.
+          </p>
+        )}
         <div className="flex items-center gap-4 mb-8">
           <select
             onChange={(e) => changeGenre(e.target.value)}
@@ -181,21 +188,22 @@ export default function ViewAllTVs() {
             Page {currentPage} of {totalPages}
           </span>
           <button
-  onClick={() => {
-    changePage(Math.min(currentPage + 1, totalPages));
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Smoothly scrolls to the top
-  }}
-  disabled={currentPage === totalPages}
-  className={`px-4 py-2 rounded-lg ${
-    currentPage === totalPages
-      ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-      : "bg-yellow-400 text-gray-900 hover:bg-yellow-500"
-  }`}
->
-  Next
-</button>
+            onClick={() => {
+              changePage(Math.min(currentPage + 1, totalPages));
+              window.scrollTo({ top: 0, behavior: "smooth" }); // Smoothly scrolls to the top
+            }}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                : "bg-yellow-400 text-gray-900 hover:bg-yellow-500"
+            }`}
+          >
+            Next
+          </button>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

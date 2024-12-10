@@ -1,37 +1,18 @@
 "use client";
-
+import Header from "@/components/Header";
+import Footer from "@/components/footer";
+import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Search, Heart, User ,Home} from "lucide-react";
 import { useDiscoverMovie } from "../_utils/api";
 import Image from "next/image";
 
 export default function ViewAllMovies() {
   const [sortBy, setSortBy] = useState("title");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-
   const API_KEY = process.env.NEXT_PUBLIC_API_KEY;;
   const { movies, changePage, changeGenre, currentPage, totalPages, genres } =
     useDiscoverMovie(API_KEY);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?query=${searchQuery}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`
-      );
-      const data = await response.json();
-      setSearchResults(data.results);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
-  };
-
   const filteredMovies = movies.sort((a, b) => {
     if (sortBy === "title") return a.title.localeCompare(b.title);
     if (sortBy === "rating") return b.vote_average - a.vote_average;
@@ -41,34 +22,7 @@ export default function ViewAllMovies() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
-      <header className="fixed top-0 left-0 right-0 h-16 bg-gray-800 z-10 flex items-center">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link href="/MainPage" className="text-2xl font-bold text-yellow-400">
-            MovieDB
-          </Link>
-          <nav className="flex items-center space-x-4">
-           
-            <Link
-              href="/MainPage"
-              className="text-gray-300 hover:text-yellow-400"
-            >
-              <Home size={24} />
-            </Link>
-            <Link
-              href="/WatchListPage"
-              className="text-gray-300 hover:text-yellow-400"
-            >
-              <Heart size={24} />
-            </Link>
-            <Link
-              href="/LoginPage"
-              className="text-gray-300 hover:text-yellow-400"
-            >
-              <User size={24} />
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header searchComponent={<SearchBar API_KEY={API_KEY} />} />
       <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mb-4">Discover Movies</h1>
         <div className="flex items-center gap-4 mb-8">
@@ -152,6 +106,7 @@ export default function ViewAllMovies() {
           </button>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
