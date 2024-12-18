@@ -16,7 +16,6 @@ import { useState, useEffect } from "react";
 const TVDetail = () => {
   const { id } = useParams();
   const router = useRouter();
-
   const { user, firebaseSignOut } = useUserAuth();
   const TV = useTVDetails(id);
   const trailerUrl = useTVTrailer(id);
@@ -54,30 +53,31 @@ const TVDetail = () => {
       router.push("/LoginPage");
       return;
     }
-
+  
     const TVData = {
       id: TV.id,
-      title: TV.title,
+      title: TV.original_name,
       poster_path: TV.poster_path,
       release_date: TV.release_date,
-      runtime: TV.runtime,
       vote_average: TV.vote_average,
-      tagline: TV.tagline,
     };
-
+  
     try {
       const watchlistRef = doc(
         collection(db, "users", user.uid, "watchlist"),
         TV.id.toString()
       );
+      console.log("Adding data to Firestore:", TVData);
       await setDoc(watchlistRef, TVData);
-      setIsInWatchlist(true); // Update state to reflect addition
-      alert(`${TV.title} has been added to your watchlist.`);
+      setIsInWatchlist(true); // Update state after successful write
+      alert(`${TV.original_name} has been added to your watchlist.`);
     } catch (error) {
-      console.error("Error adding TV to watchlist:", error);
+      console.error("Error adding TV to watchlist:", error); // Log the entire error
       alert("Failed to add TV to watchlist. Please try again.");
     }
+    
   };
+  
 
   const handleRemoveFromWatchlist = async () => {
     if (!user) {
@@ -96,7 +96,7 @@ const TVDetail = () => {
       );
       await deleteDoc(watchlistRef);
       setIsInWatchlist(false); // Update state to reflect removal
-      alert(`${TV.title} has been removed from your watchlist.`);
+      alert(`${TV.original_name} has been removed from your watchlist.`);
     } catch (error) {
       console.error("Error removing TV from watchlist:", error);
       alert("Failed to remove TV from watchlist. Please try again.");
